@@ -21,8 +21,12 @@ public class UserService {
 		return userRepository.findAll();
 	}
 	
-	public Optional<UserModel> getUser(UUID userId){
-		return userRepository.findById(userId);
+	public UserModel getUser(UUID userId){
+		Optional<UserModel> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            return userOptional.get();
+        }
+        return null;
 	}
 	
 	public UserModel createUser(UserModel user){
@@ -31,6 +35,12 @@ public class UserService {
 		user.setStatus("ACTIVE");
 		UserModel savedUser = userRepository.save(user);
 		return savedUser;
+	}
+	
+	public UserModel updateUser(UUID userId, UserModel userModel) {
+		userModel.setUserId(userId);
+		UserModel updatedUser = userRepository.save(userModel);
+        return updatedUser;
 	}
 	
 }

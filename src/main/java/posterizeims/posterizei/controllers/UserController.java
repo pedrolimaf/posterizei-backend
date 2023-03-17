@@ -1,7 +1,6 @@
 package posterizeims.posterizei.controllers;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -38,8 +38,8 @@ public class UserController {
 	}
 	
 	@GetMapping("/{userId}")
-	public ResponseEntity<Optional<UserModel>> getUser(@PathVariable UUID userId){
-		Optional<UserModel> user = userService.getUser(userId);
+	public ResponseEntity<UserModel> getUser(@PathVariable UUID userId){
+		UserModel user = userService.getUser(userId);
 		return ResponseEntity.ok(user);
 	}
 	
@@ -49,6 +49,14 @@ public class UserController {
 		BeanUtils.copyProperties(userdto, userModel);
 		UserModel createdUser = userService.createUser(userModel);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+	}
+	
+	@PutMapping("/{userId}")
+	public ResponseEntity<UserModel> updateUser(@PathVariable UUID userId, @RequestBody @Valid UserDto userdto){
+		UserModel userModel = new UserModel();
+	    BeanUtils.copyProperties(userdto, userModel);
+	    UserModel updatedUser = userService.updateUser(userId, userModel);
+	    return ResponseEntity.ok(updatedUser);
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
