@@ -1,4 +1,4 @@
-package posterizeims.posterizei.users;
+package posterizeims.posterizei.domain.users;
 
 public enum UserStatus {
     ACTIVE,

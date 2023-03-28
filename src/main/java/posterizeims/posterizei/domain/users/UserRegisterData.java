@@ -1,4 +1,4 @@
-package posterizeims.posterizei.users;
+package posterizeims.posterizei.domain.users;
 
 import jakarta.validation.constraints.*;
 
@@ -17,7 +17,6 @@ public record UserRegisterData(
         @NotNull
         LocalDate birthday,
         @NotBlank
-        @Pattern(regexp = "\\d{6,8}")
         String password
 ) {
 }
