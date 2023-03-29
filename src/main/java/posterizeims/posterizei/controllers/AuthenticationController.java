@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import posterizeims.posterizei.domain.users.AuthenticationData;
+import posterizeims.posterizei.domain.users.User;
+import posterizeims.posterizei.security.TokenData;
+import posterizeims.posterizei.security.TokenService;
 
 @RestController
 @RequestMapping("/login")
@@ -17,10 +20,14 @@ public class AuthenticationController {
 
     @Autowired
     private AuthenticationManager manager;
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping
     public ResponseEntity login(@RequestBody @Valid AuthenticationData data){
-        var token = new UsernamePasswordAuthenticationToken(data.email(),data.password());
-        var authentication = manager.authenticate(token);
-        return ResponseEntity.ok().build();
+        var authenticationToken = new UsernamePasswordAuthenticationToken(data.email(),data.password());
+        var authentication = manager.authenticate(authenticationToken);
+        var token = tokenService.generateToken((User) authentication.getPrincipal());
+        return ResponseEntity.ok(new TokenData(token));
     }
 }
