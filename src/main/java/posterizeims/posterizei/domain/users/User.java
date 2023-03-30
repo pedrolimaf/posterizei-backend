@@ -1,7 +1,6 @@
 package posterizeims.posterizei.domain.users;
 
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -9,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -32,14 +32,22 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
     private String password;
+    @Embedded
+    private Address address;
 
     public User(UserRegisterData userRegisterData) {
+
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        UserService userService = new UserService(bCryptPasswordEncoder);
+        System.out.println(userService.encoderPassword(userRegisterData.password()));
+
         this.name = userRegisterData.name();
         this.email = userRegisterData.email();
         this.phone = userRegisterData.phone();
         this.birthday = userRegisterData.birthday();
         this.status = UserStatus.ACTIVE;
-        this.password = userRegisterData.password();
+        this.password = userService.encoderPassword(userRegisterData.password());
+        this.address = new Address(userRegisterData.addressCode());
     }
 
 
@@ -95,5 +103,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

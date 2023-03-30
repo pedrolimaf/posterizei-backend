@@ -1,6 +1,7 @@
 package posterizeims.posterizei.domain.users;
 
 import jakarta.validation.constraints.*;
+import org.aspectj.weaver.ast.Not;
 
 import java.time.LocalDate;
 
@@ -17,6 +18,9 @@ public record UserRegisterData(
         @NotNull
         LocalDate birthday,
         @NotBlank
-        String password
+        String password,
+        @Pattern(regexp = "\\d{8}")
+        @NotBlank
+        String addressCode
 ) {
 }

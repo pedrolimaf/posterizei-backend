@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import posterizeims.posterizei.domain.users.*;
@@ -21,6 +22,8 @@ public class UserController {
 
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private UserService userService;
 
     @PostMapping
     @Transactional
