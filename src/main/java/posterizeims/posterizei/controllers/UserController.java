@@ -63,4 +63,19 @@ public class UserController {
         return ResponseEntity.ok(new UserDetailsData(user));
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity getUserByEmail(@PathVariable String email){
+
+        try{
+            var user = repository.findByEmail(email);
+            if(user != null){
+                return ResponseEntity.ok("Já existe um cadastro com esse e-mail.");
+            }
+            return ResponseEntity.ok("Nenhum cadastro encontrado para o e-mail informado.");
+        }catch(RuntimeException ex){
+            throw new RuntimeException("Erro ao buscar usuário por e-mail", ex);
+        }
+
+    }
+
 }
