@@ -19,8 +19,6 @@ public record UserRegisterData(
         LocalDate birthday,
         @NotBlank
         String password,
-        @Pattern(regexp = "\\d{8}")
-        @NotBlank
         String addressCode
 ) {
 }

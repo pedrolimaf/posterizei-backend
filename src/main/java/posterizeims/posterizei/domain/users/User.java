@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import posterizeims.posterizei.domain.users.services.UserService;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -47,7 +48,10 @@ public class User implements UserDetails {
         this.birthday = userRegisterData.birthday();
         this.status = UserStatus.ACTIVE;
         this.password = userService.encoderPassword(userRegisterData.password());
-        this.address = new Address(userRegisterData.addressCode());
+        if(userRegisterData.addressCode() != null){
+            this.address = new Address(userRegisterData.addressCode());
+        }
+
     }
 
 

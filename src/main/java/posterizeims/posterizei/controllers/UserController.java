@@ -7,10 +7,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import posterizeims.posterizei.domain.users.*;
+import posterizeims.posterizei.domain.users.services.UserService;
+import posterizeims.posterizei.security.TokenService;
+import posterizeims.posterizei.security.TokenData;
 
 import java.util.UUID;
 
@@ -24,16 +26,17 @@ public class UserController {
     private UserRepository repository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping
     @Transactional
     public ResponseEntity register(@RequestBody @Valid UserRegisterData data, UriComponentsBuilder uriComponentsBuilder){
-        var user = new User(data);
-        repository.save(user);
 
+        var user = userService.createUser(data);
         var uri = uriComponentsBuilder.path("/users/{id}").buildAndExpand(user.getId()).toUri();
 
-        return ResponseEntity.created(uri).body(new UserListData(user));
+        return ResponseEntity.created(uri).body(new TokenData(user.getId(),tokenService.generateToken(user)));
     }
 
     @GetMapping
@@ -65,17 +68,7 @@ public class UserController {
 
     @GetMapping("/email/{email}")
     public ResponseEntity getUserByEmail(@PathVariable String email){
-
-        try{
-            var user = repository.findByEmail(email);
-            if(user != null){
-                return ResponseEntity.ok("Já existe um cadastro com esse e-mail.");
-            }
-            return ResponseEntity.ok("Nenhum cadastro encontrado para o e-mail informado.");
-        }catch(RuntimeException ex){
-            throw new RuntimeException("Erro ao buscar usuário por e-mail", ex);
-        }
-
+        return ResponseEntity.ok(userService.getUserByEmail(email));
     }
 
 }

@@ -9,9 +9,11 @@ public record UserDetailsData(
         String email,
         String phone,
         LocalDate birthday,
-        UserStatus status
+        UserStatus status,
+
+        Address address
 ) {
     public UserDetailsData(User user){
-        this(user.getId(), user.getName(), user.getEmail(), user.getPhone(), user.getBirthday(), user.getStatus());
+        this(user.getId(), user.getName(), user.getEmail(), user.getPhone(), user.getBirthday(), user.getStatus(), user.getAddress());
     }
 }

@@ -1,4 +1,10 @@
 package posterizeims.posterizei.security;
 
-public record TokenData(String token) {
+import java.util.UUID;
+
+public record TokenData(
+        UUID id,
+        String token
+
+) {
 }
